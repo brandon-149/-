@@ -4841,48 +4841,48 @@ rule("[서브 루틴] 마피아 아이콘 생성")
 
 rule("살해 혹은 살인")
 {
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
+    event
+    {
+        Ongoing - Each Player;
+        All;
+        All;
+    }
 
-	condition
-	{
-		Global.Time == 3;
-		Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], Current Array Element)) == True;
-	}
+    condition
+    {
+        Global.Time == 3;
+        Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], First Of(Current Array Element))) == True;
+    }
 
-	action
-	{
-		If(Array Contains(Event Player.Condition, Custom String("살해")) && Array Contains(Event Player.Condition, Custom String("살인")));
-			If(Array Contains(Global.Power_array[1], Event Player.Role));
-				Modify Global Variable(Mafia_team, Append To Array, Event Player);
-			End;
-			If(Event Player.Role == Custom String("기계 인간"));
-			Else If(Array Contains(Event Player.Condition, Custom String("희생")));
-				Call Subroutine(Sacrifice);
-			Else If(Event Player.Power == Custom String("자폭") && Event Player.Power_able_left);
-				Call Subroutine(Suicide_bombing);
-			Else;
-				Modify Global Variable(Execute_players, Append To Array, Event Player);
-			End;
-		Else If(Array Contains(Event Player.Condition, Custom String("살해")));
-			If(Array Contains(Global.Power_array[1], Event Player.Role));
-				Modify Global Variable(Mafia_team, Append To Array, Event Player);
-			Else If(Event Player.Role == Custom String("살인마"));
-			Else;
-				Call Subroutine(Murder);
-			End;
-		Else If(Array Contains(Event Player.Condition, Custom String("살인")));
-			If(Array Contains(Global.Mafia_team, Event Player));
-			Else If(Event Player.Role == Custom String("기계 인간"));
-			Else;
-				Call Subroutine(Murder);
-			End;
-		End;
-	}
+    action
+    {
+        If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해"))) && Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살인"))));
+            If(Array Contains(Global.Power_array[1], Event Player.Role));
+                Modify Global Variable(Mafia_team, Append To Array, Event Player);
+            End;
+            If(Event Player.Role == Custom String("기계 인간"));
+            Else If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("희생"))));
+                Call Subroutine(Sacrifice);
+            Else If(Event Player.Power == Custom String("자폭") && Event Player.Power_able_left);
+                Call Subroutine(Suicide_bombing);
+            Else;
+                Modify Global Variable(Execute_players, Append To Array, Event Player);
+            End;
+        Else If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해"))));
+            If(Array Contains(Global.Power_array[1], Event Player.Role));
+                Modify Global Variable(Mafia_team, Append To Array, Event Player);
+            Else If(Event Player.Role == Custom String("살인마"));
+            Else;
+                Call Subroutine(Murder);
+            End;
+        Else If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살인"))));
+            If(Array Contains(Global.Mafia_team, Event Player));
+            Else If(Event Player.Role == Custom String("기계 인간"));
+            Else;
+                Call Subroutine(Murder);
+            End;
+        End;
+    }
 }
 
 rule("능력 사용 대상 잡기")
