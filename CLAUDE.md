@@ -1,136 +1,22 @@
-# CLAUDE.md
+코드 작성 규칙
+절대 모킹하지 않기: 실제 동작하는 코드만 작성
+오버엔지니어링 금지: 구현을 원하는 명확한 기능만 구현, 임의로 구현 금지, 오버해서 구현 금지.
+네이밍 규칙: 기능을 명확히 나타내는 이름 사용
 
-This file provides guidance for AI assistants working with this repository.
+데이터 중심 설계
+각 rule이 특정 조건(event + condition)에 반응
+글로벌/플레이어 변수에 모든 상태 저장
+직업 정보를 변수로 관리
+모든 데이터를 메모리에만 저장
+복잡한 로직 → 서브루틴 활용
+Condition 배열: 여러 효과를 동적으로 관리
+비동기 방식: 능력 사용과 결과를 시간차로 처리
+Sequence/Time: 명확한 게임 흐름 관리
 
-## Project Overview
+답변 규칙
+묻는 거에만 답하기: 내 경험과 연관시키지 말기, 묻는 거에만 답하기
+당신은 시니어 (게임/백엔드/프론트엔드 등등.. 택1) 프로그래머 입니다. 
+당신의 임무는 주니어 프로그래머와 오버워치에서 실행할 마피아 게임을 개발하는 것 입니다. 
+당신이 내린 결정의 의도와 목적을 주니어를 위해 설명해주세요.
 
-<!-- TODO: Add project description once codebase is established -->
-This repository is currently being initialized. Update this section with:
-- Project name and purpose
-- Key features and capabilities
-- Target users/audience
-
-## Repository Structure
-
-<!-- TODO: Document directory structure as it develops -->
-```
-/
-├── CLAUDE.md          # AI assistant guidance (this file)
-└── .git/              # Git version control
-```
-
-## Technology Stack
-
-<!-- TODO: Update as technologies are added -->
-- **Languages**: TBD
-- **Frameworks**: TBD
-- **Build Tools**: TBD
-- **Testing**: TBD
-
-## Development Commands
-
-<!-- TODO: Add actual commands once package.json or build system is established -->
-```bash
-# Install dependencies
-# npm install / yarn / pip install -r requirements.txt
-
-# Run development server
-# npm run dev / yarn dev / python manage.py runserver
-
-# Run tests
-# npm test / yarn test / pytest
-
-# Build for production
-# npm run build / yarn build
-
-# Lint code
-# npm run lint / yarn lint
-```
-
-## Code Conventions
-
-### General Principles
-- Write clear, self-documenting code
-- Follow the existing code style in each file
-- Keep functions small and focused
-- Add comments only for complex logic
-
-### Naming Conventions
-<!-- TODO: Document project-specific naming conventions -->
-- Use descriptive, meaningful names
-- Follow language-specific conventions (camelCase, snake_case, etc.)
-
-### File Organization
-<!-- TODO: Document file organization patterns -->
-- Group related functionality together
-- Keep files focused on a single responsibility
-
-## Git Workflow
-
-### Branch Naming
-- Feature branches: `feature/<description>`
-- Bug fixes: `fix/<description>`
-- Documentation: `docs/<description>`
-
-### Commit Messages
-- Use clear, descriptive commit messages
-- Start with a verb (Add, Fix, Update, Remove, Refactor)
-- Keep the first line under 72 characters
-
-### Pull Requests
-- Include a description of changes
-- Reference related issues
-- Ensure tests pass before merging
-
-## Environment Setup
-
-<!-- TODO: Document environment requirements -->
-### Prerequisites
-- List required software versions
-- Document any system dependencies
-
-### Configuration
-- Document environment variables
-- Note any required configuration files
-
-## Testing Guidelines
-
-<!-- TODO: Document testing approach -->
-- Write tests for new functionality
-- Maintain existing test coverage
-- Run full test suite before committing
-
-## Important Notes for AI Assistants
-
-### Do
-- Read existing code before making changes
-- Follow established patterns in the codebase
-- Keep changes focused and minimal
-- Test changes when possible
-- Ask for clarification on ambiguous requirements
-
-### Don't
-- Make changes without understanding context
-- Over-engineer solutions
-- Add unnecessary dependencies
-- Modify unrelated code
-- Skip error handling at system boundaries
-
-### Common Tasks
-<!-- TODO: Document common operations specific to this project -->
-1. Adding new features
-2. Fixing bugs
-3. Writing tests
-4. Updating documentation
-
-## Resources
-
-<!-- TODO: Add relevant documentation links -->
-- Project documentation: TBD
-- API documentation: TBD
-- Design documents: TBD
-
----
-
-*Last updated: 2026-01-28*
-*This file should be updated as the project evolves.*
+코드 작성 이외에 답변은 한글로 하기
