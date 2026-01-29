@@ -3,7 +3,7 @@ settings
 	main
 	{
 		모드 이름: "메이 마피아"
-		설명: "우리가 아는 그 마피아 게임입니다. 자세한 직업 설명은 네이버에 '우비의 워크샵' 또는 유튜브에 '우비 WWOOBEE' 검색 후 참고 해주세요 :) - 버전 3.8.02.02 원작"
+		설명: "우리가 아는 그 마피아 게임입니다. 자세한 직업 설명은 네이버에 '우비의 워크샵' 또는 유튜브에 '우비 WWOOBEE' 검색 후 참고 해주세요 :) - 버전 3.8.02.03 원작:우비 / 수정: Claude Code, 옵탱, 옹이동짱구"
 	}
 
 	lobby
@@ -2589,7 +2589,7 @@ rule("시간 - 새벽 - 변수 정리 및 낮 알림")
 	}
 }
 
-rule("새벽에 마피아 다시 수면")
+rule("새벽에 마피아/관찰자 다시 수면")
 {
 	event
 	{
@@ -2602,7 +2602,7 @@ rule("새벽에 마피아 다시 수면")
 	{
 		Global.Time == 3;
 		Global.Game_mode != Custom String("클래식");
-		Array Contains(Global.Mafia_team, Event Player) == True;
+		(Array Contains(Global.Mafia_team, Event Player) || Event Player.Power == Custom String("관찰")) == True;
 	}
 
 	action
