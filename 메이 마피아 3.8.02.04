@@ -3,7 +3,8 @@ settings
 	main
 	{
 		모드 이름: "메이 마피아"
-		설명: "우리가 아는 그 마피아 게임입니다. 자세한 직업 설명은 네이버에 '우비의 워크샵' 또는 유튜브에 '우비 WWOOBEE' 검색 후 참고 해주세요 :) - 버전 3.8.02.03 수정:claude code, 옵탱, 옹이동짱구 "
+		설명: "우리가 아는 그 마피아 게임입니다. 자세한 직업 설명은 네이버에 '우비의 워크샵' 또는 유튜브에 '우비 WWOOBEE' 검색 후 참고 해주세요 :) - 버전 3.8.02.04 수정:claude code, 옵탱, 옹이동짱구 "
+	}
 	}
 
 	lobby
@@ -324,6 +325,10 @@ rule("게임 사용자 설정")
 			"흑기사") : Null;
 		Global.Citizen_SR_setting[10] = Workshop Setting Toggle(Custom String("시민 특수 직업"), Custom String("관찰자"), True, 23) ? Custom String(
 			"관찰자") : Null;
+		"직업 능력 활성화 날짜"
+		Global.Mode_setting[7] = Workshop Setting Integer(Custom String("직업 능력 설정"), Custom String("경찰 능력 활성화 날짜"), 2, 1, 4, 1);
+		Global.Mode_setting[8] = Workshop Setting Integer(Custom String("직업 능력 설정"), Custom String("성직자 능력 활성화 날짜"), 3, 1, 4, 2);
+		Global.Mode_setting[9] = Workshop Setting Integer(Custom String("직업 능력 설정"), Custom String("기자 능력 활성화 날짜"), 3, 1, 4, 3);
 		"마피아 특수 직업"
 		Global.Mafia_SR_setting[0] = Workshop Setting Toggle(Custom String("마피아 특수 직업"), Custom String("스파이"), True, 31) ? Custom String(
 			"스파이") : Null;
@@ -3397,7 +3402,7 @@ rule("경찰 설정")
 	action
 	{
 		Event Player.Power = Custom String("조사");
-		Event Player.Power_able_day = Global.Count_of_players <= 6 || Global.Game_mode == Custom String("클래식") ? 1 : 2;
+		Event Player.Power_able_day = Global.Mode_setting[7];
 		Event Player.Power_able_left = 1;
 		Event Player.Power_able_targets = 2;
 		Event Player.Power_type = 1;
@@ -3740,14 +3745,14 @@ rule("기자 설정")
 	action
 	{
 		Event Player.Power = Custom String("특종");
-		Event Player.Power_able_day = 3;
+		Event Player.Power_able_day = Global.Mode_setting[9];
 		Event Player.Power_able_left = 1;
 		Event Player.Power_able_targets = 1;
 		Event Player.Power_type = 2;
 		Event Player.Class = 3;
 		Event Player.Role_icon = Hero(루시우);
 		Event Player.Role_guide = Custom String(
-			"[특종]\r\n3번째 밤이 되면 능력을 얻습니다\r\n단 한 번, 대상의 직업을 모두에게 알립니다\r\n\r\n낮이 오기 전 사망할 경우 기사가 뜨지 않으며\r\n대상이 사망할 경우 특종은 사망만을 알립니다");
+			"[특종]\r\n{0}번째 밤이 되면 능력을 얻습니다\r\n단 한 번, 대상의 직업을 모두에게 알립니다\r\n\r\n낮이 오기 전 사망할 경우 기사가 뜨지 않으며\r\n대상이 사망할 경우 특종은 사망만을 알립니다", Event Player.Power_able_day);
 		Event Player.Tips_and_jokes = Array(Custom String("Tip: 맞 직업의 특종 기사를 노려보세요!"), Custom String("기자로써 진실을 전하고 싶어요!"));
 		Event Player.Tip_or_joke = Random Value In Array(Event Player.Tips_and_jokes);
 		Abort If(Global.Time_muchine);
@@ -3845,14 +3850,14 @@ rule("성직자 설정")
 	action
 	{
 		Event Player.Power = Custom String("부활");
-		Event Player.Power_able_day = 3;
+		Event Player.Power_able_day = Global.Mode_setting[8];
 		Event Player.Power_able_left = 1;
 		Event Player.Power_able_targets = 3;
 		Event Player.Power_type = 2;
 		Event Player.Class = 3;
 		Event Player.Role_icon = Hero(브리기테);
 		Event Player.Role_guide = Custom String(
-			"[부활]\r\n3번째 밤이 되면 능력을 얻습니다\r\n단 한 번, 죽은 대상을 되살립니다\r\n\r\n낮이 오기 전 사망하거나\r\n영매가 성불하였다면 부활하지 않습니다");
+			"[부활]\r\n{0}번째 밤이 되면 능력을 얻습니다\r\n단 한 번, 죽은 대상을 되살립니다\r\n\r\n낮이 오기 전 사망하거나\r\n영매가 성불하였다면 부활하지 않습니다", Event Player.Power_able_day);
 		Event Player.Tips_and_jokes = Array(Custom String("Tip: 영매가 있다면 부활을 함부로 쓰면 안 돼요!"));
 		Event Player.Tip_or_joke = Random Value In Array(Event Player.Tips_and_jokes);
 		Abort If(Global.Time_muchine);
