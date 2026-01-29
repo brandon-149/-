@@ -3282,25 +3282,28 @@ rule("시간 - 저녁 - 변수 정리")
 
 rule("[서브 루틴] 살해 혹은 살인")
 {
-	event
-	{
-		Subroutine;
-		Murder;
-	}
+    event
+    {
+        Subroutine;
+        Murder;
+    }
 
-	action
-	{
-		If(Array Contains(Event Player.Condition, Custom String("희생")));
-			Call Subroutine(Sacrifice);
-		Else If(Event Player.Power == Custom String("자폭") && Event Player.Power_able_left);
-			Call Subroutine(Suicide_bombing);
-		Else If(Event Player.Power == Custom String("방어술") && Event Player.Power_able_left);
-			Call Subroutine(Defense_against);
-		Else;
-			Skip If(Array Contains(Event Player.Condition, Custom String("치유")), 1);
-			Modify Global Variable(Execute_players, Append To Array, Event Player);
-		End;
-	}
+    actions
+    {
+        "희생 체크 - 흑기사가 대신 죽음"
+        If(Filtered Array(Global.Murder_target.Condition, Array Contains(Current Array Element, Custom String("희생"))));
+            Global.Murder_target = First Of(Filtered Array(Global.Murder_target.Condition, Array Contains(Current Array Element, Custom String("희생"))))[1];
+        End;
+        
+        "치유 체크 - 성직자의 치유로 생존"
+        If(Filtered Array(Global.Murder_target.Condition, Array Contains(Current Array Element, Custom String("치유"))));
+            Abort;
+        End;
+        
+        "실제 살해 실행"
+        Global.Murder_target.Death_cause = Global.Murder_cause;
+        Global.Murder_target.Alive = False;
+    }
 }
 
 rule("시민 설정")
@@ -3923,7 +3926,7 @@ rule("[서브 루틴] 방어술")
 
 	action
 	{
-		If(Array Contains(Event Player.Condition, Custom String("현혹")));
+		If(Filtered Array(Condition, Array Contains(Current Array Element, "현혹")));
 			Modify Global Variable(Execute_players, Append To Array, Event Player);
 			Event Player.P_Message_request[Count Of(Event Player.P_Message_request)] = Array(3, Event Player, Hero Icon String(Hero(위도우메이커)),
 				Random Value In Array(Array(Custom String("마담: "))));
@@ -3982,7 +3985,7 @@ rule("[서브 루틴] 자폭")
 	action
 	{
 		Modify Global Variable(Execute_players, Append To Array, Event Player);
-		If(Array Contains(Event Player.Condition, Custom String("현혹")));
+		If(Filtered Array(Condition, Array Contains(Current Array Element, "현혹")));
 			Event Player.P_Message_request[Count Of(Event Player.P_Message_request)] = Array(3, Event Player, Hero Icon String(Hero(위도우메이커)),
 				Random Value In Array(Array(Custom String("마담: "))));
 		Else;
@@ -4030,24 +4033,29 @@ rule("흑기사 설정")
 
 rule("[서브 루틴] 희생")
 {
-	event
-	{
-		Subroutine;
-		Sacrifice;
-	}
+    event
+    {
+        Subroutine;
+        Sacrifice;
+    }
 
-	action
-	{
-		Skip If(Array Contains(Event Player.Condition, Custom String("살해")) && Array Contains(Event Player.Condition, Custom String("살인")),
-			1);
-		Skip If(Array Contains(Mapped Array(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String(
-			"희생"))), Last Of(Current Array Element)).Condition, Custom String("치유")), 2);
-		Modify Global Variable(Execute_players, Append To Array, Mapped Array(Filtered Array(Event Player.Condition, Array Contains(
-			Current Array Element, Custom String("희생"))), Last Of(Current Array Element)));
-		Event Player.P_Message_request[Count Of(Event Player.P_Message_request)] = Array(3, Mapped Array(Filtered Array(
-			Event Player.Condition, Array Contains(Current Array Element, Custom String("희생"))), Last Of(Current Array Element)),
-			Hero Icon String(Hero(겐지)), Custom String("[{0}]님을 위해 희생하였습니다", Event Player.Name_plate));
-	}
+    actions
+    {
+        "대상에게 살해 혹은 살인이 있는지 체크"
+        If(Filtered Array(Global.Sacrifice_target.Condition, Array Contains(Current Array Element, Custom String("살해"))) 
+           || Filtered Array(Global.Sacrifice_target.Condition, Array Contains(Current Array Element, Custom String("살인"))));
+            
+            "흑기사가 치유를 받았는지 체크"
+            If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("치유"))));
+                "치유로 흑기사 생존"
+                Abort;
+            End;
+            
+            "흑기사 사망 처리"
+            Event Player.Death_cause = Custom String("희생");
+            Event Player.Alive = False;
+        End;
+    }
 }
 
 rule("관찰자 설정")
