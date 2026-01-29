@@ -2176,11 +2176,12 @@ rule("[서브 루틴] 전체 UI")
 		Create HUD Text(All Players(All Teams), Hero Icon String(Hero(메이)), Custom String("시민 팀"), Custom String(
 			"시민 {0}명　중직 {1}명　특수 직업 {2}명", Global.Role_count[0], Global.Role_count[1], Global.Role_count[2]), Left, 1, Color(Sky Blue),
 			Color(Sky Blue), Color(흰색), Visible To and String, Default Visibility);
-		Create HUD Text(All Players(All Teams), Hero Icon String(Hero(리퍼)), Custom String("마피아 팀"), Custom String("마피아 {0}명　특수 직업 {1}명",
-			Global.Role_count[3], Global.Role_count[4]), Left, 2, Color(Red), Color(Red), Color(흰색), Visible To and String,
-			Default Visibility);
-		Create HUD Text(All Players(All Teams), Hero Icon String(Hero(로드호그)), Custom String("3 세력"), Custom String("3 세력 {0}명",
-			Global.Role_count[5]), Left, 3, Color(Purple), Color(Purple), Color(흰색), Visible To and String, Default Visibility);
+		Create HUD Text(All Players(All Teams), Hero Icon String(Hero(리퍼)), Custom String("마피아 팀"), Custom String(
+			"마피아 {0}명　특수 직업 {1}명                         ", Global.Role_count[3], Global.Role_count[4]), Left, 2, Color(Red), Color(Red),
+			Color(흰색), Visible To and String, Default Visibility);
+		Create HUD Text(All Players(All Teams), Hero Icon String(Hero(로드호그)), Custom String("3 세력"), Custom String(
+			"3 세력 {0}명                                             ", Global.Role_count[5]), Left, 3, Color(Purple), Color(Purple), Color(
+			흰색), Visible To and String, Default Visibility);
 		Create HUD Text(Filtered Array(All Players(All Teams), !Current Array Element.Guide), Null, Null, Custom String(
 			"\r\n　활성화된 직업 {0} 열기\r\n", Input Binding String(Button(Reload))), Left, 4, Color(흰색), Color(흰색), Color(흰색),
 			Visible To and String, Default Visibility);
@@ -2201,11 +2202,10 @@ rule("[서브 루틴] 전체 UI")
 		Create HUD Text(Filtered Array(All Players(All Teams), Current Array Element.Ability_UI != 2), Null, Custom String(" "),
 			Custom String(" "), Top, -5, Color(흰색), Color(흰색), Color(흰색), Visible To and String, Default Visibility);
 		Create HUD Text(Filtered Array(Global.Players, !Current Array Element.Using_camera), Null, Custom String("\r\n"), Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n★\r\n\r\n\r\n\r\n\r\n\r\n\r\n"), Top, -3, Color(흰색), Color(흰색), Color(Green),
-			Visible To and String, Default Visibility);
+			"\r\n\r\n\r\n\r\n★\r\n\r\n\r\n\r\n"), Top, -3, Color(흰색), Color(흰색), Color(Green), Visible To and String, Default Visibility);
 		Create HUD Text(Filtered Array(Global.Players, Current Array Element.Using_camera), Null, Custom String("\r\n"), Custom String(
-			"\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n{0}\r\n\r\n\r\n\r\n\r\n\r\n\r\n", Custom String(" ")), Top, -3, Color(흰색),
-			Color(흰색), Color(Green), Visible To and String, Default Visibility);
+			"\r\n\r\n\r\n\r\n\n{0}\r\n\r\n\r\n\r\n\r", Custom String(" ")), Top, -3, Color(흰색), Color(흰색), Color(Green),
+			Visible To and String, Default Visibility);
 		"Right"
 		Create HUD Text(Filtered Array(All Players(All Teams), (Count Of(Global.Mafia_team) >= 2 && Array Contains(Global.Mafia_team,
 			Current Array Element)) || (Count Of(Global.TF_team) >= 2 && Array Contains(Global.TF_team, Current Array Element))), Null,
