@@ -3289,6 +3289,7 @@ rule("[서브 루틴] 살해 혹은 살인")
     }
 
     actions
+{
     {
         "희생 체크 - 흑기사가 대신 죽음"
         If(Filtered Array(Global.Murder_target.Condition, Array Contains(Current Array Element, Custom String("희생"))));
