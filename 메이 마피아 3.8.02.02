@@ -1375,12 +1375,21 @@ disabled rule("마피아 픽")
 
 	action
 	{
-		Filtered Array(Global.Players, Current Array Element.Power == Event Player.Power).Target = Null;
-		Modify Player Variable(Global.Players, Condition, Remove From Array By Value, Event Player.Power);
+		// 모든 플레이어에서 "살해" 컨디션 제거
+		Modify Player Variable(Global.Players, Condition, Remove From Array By Value, Custom String("살해"));
+		
+		// 모든 마피아의 Target 초기화
+		Global.Mafia_team.Target = Null;
+		
 		Event Player.Target = Event Player.Ability_list[Event Player.Pick_number];
 		Call Subroutine(Get_ability_target);
 		Global.Mafia_team.Sound_effect = 1;
 		Abort If(Event Player.Ability_target == False);
+		
+		// 모든 마피아가 같은 타겟을 공유하도록 설정
+		Global.Mafia_team.Target = Event Player.Target;
+		Global.Mafia_team.Ability_target = Event Player.Ability_target;
+		
 		Event Player.Ability_target.Condition[Count Of(Event Player.Ability_target.Condition)] = Array(Event Player.Power, Event Player);
 		Global.Message_request[Count Of(Global.Message_request)] = Array(2, Global.Mafia_team, Hero Icon String(Event Player.Role_icon),
 			Custom String("[{0}]님이 [{1}]님을 지목하였습니다", Event Player.Name_plate, Event Player.Target.Name_plate));
@@ -1414,8 +1423,13 @@ rule("마피아 픽 - 클래식 모드")
 		Event Player.Hit_scan_player = Ray Cast Hit Player(Eye Position(Event Player), Eye Position(Event Player) + Facing Direction Of(
 			Event Player) * 10, Global.Live_players, Event Player, True);
 		Abort If(!Event Player.Hit_scan_player);
-		Filtered Array(Global.Players, Current Array Element.Power == Event Player.Power).Target = Null;
-		Modify Player Variable(Global.Players, Condition, Remove From Array By Value, Event Player.Power);
+		
+		// 모든 플레이어에서 "살해" 컨디션 제거
+		Modify Player Variable(Global.Players, Condition, Remove From Array By Value, Custom String("살해"));
+		
+		// 모든 마피아의 Target 초기화
+		Global.Mafia_team.Target = Null;
+		
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.Target = Event Player.Hit_scan_player;
 		Else If(Is Button Held(Event Player, Button(Crouch)));
@@ -1424,6 +1438,11 @@ rule("마피아 픽 - 클래식 모드")
 		Call Subroutine(Get_ability_target);
 		Global.Mafia_team.Sound_effect = 1;
 		Abort If(!Event Player.Ability_target);
+		
+		// 모든 마피아가 같은 타겟을 공유하도록 설정
+		Global.Mafia_team.Target = Event Player.Target;
+		Global.Mafia_team.Ability_target = Event Player.Ability_target;
+		
 		Event Player.Ability_target.Condition[Count Of(Event Player.Ability_target.Condition)] = Array(Event Player.Power, Event Player);
 		Global.Message_request[Count Of(Global.Message_request)] = Array(2, Global.Mafia_team, Hero Icon String(Event Player.Role_icon),
 			Custom String("[{0}]님이 [{1}]님을 지목하였습니다", Event Player.Name_plate, Event Player.Target.Name_plate));
@@ -4868,13 +4887,23 @@ rule("살해 혹은 살인")
             Else;
                 Modify Global Variable(Execute_players, Append To Array, Event Player);
             End;
-        Else If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해"))));
+        // "살해"가 하나만 있는 경우 - 마지막 것만 처리
+        Else If(Count Of(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해")))) == 1);
             If(Array Contains(Global.Power_array[1], Event Player.Role));
                 Modify Global Variable(Mafia_team, Append To Array, Event Player);
             Else If(Event Player.Role == Custom String("살인마"));
             Else;
                 Call Subroutine(Murder);
             End;
+        // "살해"가 여러 개 있는 경우 - 아무것도 하지 않음 (중복 지목 방지)
+        Else If(Count Of(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해")))) > 1);
+            // 마지막 "살해"만 남기고 나머지 제거
+            Event Player.Condition = Append To Array(
+                Filtered Array(Event Player.Condition, !Array Contains(Current Array Element, Custom String("살해"))),
+                Last Of(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살해"))))
+            );
+            // 다시 처리하도록 루프
+            Loop If Condition Is True;
         Else If(Filtered Array(Event Player.Condition, Array Contains(Current Array Element, Custom String("살인"))));
             If(Array Contains(Global.Mafia_team, Event Player));
             Else If(Event Player.Role == Custom String("기계 인간"));
@@ -5417,5 +5446,39 @@ rule("스토킹 손보기")
 			Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
 				Custom String("[{0}] ☞ Ⅹ", Event Player.Target.Name_plate));
 		End;
+	}
+}
+
+rule("밤 끝날 때 마피아 타겟 정리")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	condition
+	{
+		Global.Time == 3;
+	}
+
+	action
+	{
+		// 모든 "살해" 컨디션 수집
+		Global.For_Execute = Null;
+		For Global Variable(For_Division_roles, 0, Count Of(Global.Players), 1);
+			If(Filtered Array(Global.Players[Global.For_Division_roles].Condition, Array Contains(Current Array Element, Custom String("살해"))));
+				Global.For_Execute = Append To Array(Global.For_Execute, Global.Players[Global.For_Division_roles]);
+			End;
+		End;
+		
+		// 중복 제거 - 마지막 지목만 남김
+		If(Count Of(Global.For_Execute) > 1);
+			// 첫 번째들의 "살해" 컨디션 제거
+			For Global Variable(For_Able_role_setting, 0, Count Of(Global.For_Execute) - 1, 1);
+				Modify Player Variable(Global.For_Execute[Global.For_Able_role_setting], Condition, Remove From Array By Value, Custom String("살해"));
+			End;
+		End;
+		
+		Wait(0.100, Ignore Condition);
 	}
 }
