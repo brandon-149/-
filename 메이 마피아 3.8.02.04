@@ -3568,33 +3568,37 @@ rule("영매 설정")
 
 rule("영매 - 성불")
 {
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
+    event
+    {
+        Ongoing - Each Player;
+        All;
+        All;
+    }
 
-	condition
-	{
-		Global.Time == 5;
-		Event Player.Target == True;
-		Event Player.Power == Custom String("성불");
-	}
+    condition
+    {
+        Global.Time == 5;
+        Event Player.Target == True;
+        Event Player.Power == Custom String("성불");
+    }
 
-	action
-	{
-		If(Array Contains(Event Player.Ability_target.Team, 1));
-			Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
-				Custom String("[{0}]님은 [선한 기운]이 느껴집니다", Event Player.Target.Name_plate));
-		Else If(Event Player.Ability_target.Role == Custom String("기계 인간"));
-			Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
-				Custom String("[{0}]님에게 기운이 느껴지지 않습니다", Event Player.Target.Name_plate));
-		Else;
-			Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
-				Custom String("[{0}]님은 [악한 기운]이 느껴집니다", Event Player.Target.Name_plate));
-		End;
-	}
+    action
+    {
+        "성불 상태 부여 - 대상의 Condition에 성불 추가"
+        Modify Player Variable(Event Player.Ability_target, Condition, Append To Array, Custom String("성불"));
+        
+        "세력 확인 메시지 표시"
+        If(Array Contains(Event Player.Ability_target.Team, 1));
+            Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
+                Custom String("[{0}]님은 [선한 기운]이 느껴집니다", Event Player.Target.Name_plate));
+        Else If(Event Player.Ability_target.Role == Custom String("기계 인간"));
+            Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
+                Custom String("[{0}]님에게 기운이 느껴지지 않습니다", Event Player.Target.Name_plate));
+        Else;
+            Global.Message_request[Count Of(Global.Message_request)] = Array(3, Event Player, Hero Icon String(Event Player.Role_icon),
+                Custom String("[{0}]님은 [악한 기운]이 느껴집니다", Event Player.Target.Name_plate));
+        End;
+    }
 }
 
 rule("건달 설정")
