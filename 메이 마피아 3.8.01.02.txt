@@ -3862,7 +3862,7 @@ rule("성직자 - 부활")
 
 	action
 	{
-		If(Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], Current Array Element)) && !Array Contains(
+		If(Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], First Of(Current Array Element))) && !Array Contains(
 			Event Player.Condition, Custom String("치유")) && !Array Contains(Event Player.Condition, Custom String("희생")));
 			Event Player.P_Message_request[Count Of(Event Player.P_Message_request)] = Array(3, Event Player, Hero Icon String(
 				Event Player.Role_icon), Custom String("되살리기 전날 당신은 죽었습니다"));
@@ -3927,7 +3927,7 @@ rule("[서브 루틴] 방어술")
 		Else;
 			Event Player.P_Message_request[Count Of(Event Player.P_Message_request)] = Array(1, All Players(All Teams), Hero Icon String(Hero(
 				자리야)), Random Value In Array(Array(Custom String("[군인]이 [{0}]의 공격을 받았습니다", Mapped Array(Filtered Array(Event Player.Condition,
-				Array Contains(Global.Power_array[0], Current Array Element)), Last Of(Current Array Element)).Role))));
+				Array Contains(Global.Power_array[0], First Of(Current Array Element))), Last Of(Current Array Element)).Role))));
 			Event Player.Power_able_left -= 1;
 		End;
 	}
@@ -4851,7 +4851,7 @@ rule("살해 혹은 살인")
 	condition
 	{
 		Global.Time == 3;
-		Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], Current Array Element)) == True;
+		Filtered Array(Event Player.Condition, Array Contains(Global.Power_array[0], First Of(Current Array Element))) == True;
 	}
 
 	action
@@ -5418,4 +5418,5 @@ rule("스토킹 손보기")
 				Custom String("[{0}] ☞ Ⅹ", Event Player.Target.Name_plate));
 		End;
 	}
+
 }
