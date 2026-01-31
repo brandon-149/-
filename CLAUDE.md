@@ -202,5 +202,3 @@ Skip / Skip If
 ## 참고 자료
 
 - [Workshop Syntax Script Database](https://us.forums.blizzard.com/en/overwatch/t/wiki-workshop-syntax-script-database/335011)
-- 유튜브: 우비 WWOOBEE
-- 네이버: 우비의 워크샵
