@@ -1415,7 +1415,7 @@ rule("마피아 픽 - 클래식 모드")
 			Event Player) * 10, Global.Live_players, Event Player, True);
 		Abort If(!Event Player.Hit_scan_player);
 		Filtered Array(Global.Players, Current Array Element.Power == Event Player.Power).Target = Null;
-		Modify Player Variable(Global.Players, Condition, Remove From Array By Value, Event Player.Power);
+		Global.Players.Condition = Filtered Array(Global.Players.Condition, First Of(Current Array Element) != Event Player.Power);
 		If(Is Button Held(Event Player, Button(Primary Fire)));
 			Event Player.Target = Event Player.Hit_scan_player;
 		Else If(Is Button Held(Event Player, Button(Crouch)));
