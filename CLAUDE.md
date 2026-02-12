@@ -19,7 +19,7 @@ pip install pandas
 
 ## 🔑 API 정보
 - **API 제공**: 국립중앙도서관
-- **API 키**: [국립중앙도서관 Open API 신청 필요](https://www.nl.go.kr/seoji/)
+- **API 키**: ad6e03af9e224764a3cf6566d12048e22d6abae0081c47226266faae0d60c52e
 - **API 문서**: 국립중앙도서관 서지정보 유통 지원 시스템
 
 ## 📂 프로젝트 구조
