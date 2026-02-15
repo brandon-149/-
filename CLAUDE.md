@@ -17,3 +17,7 @@
 
 Open API 인증키
 - ttbrlaguswls5251446001
+
+사용중인 버전
+-Python 3.13.6
+-visual studio code 1.108.02
