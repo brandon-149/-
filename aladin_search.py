@@ -7,6 +7,7 @@ TTB_KEY = "ttbrlaguswls5251446001"
 BASE_URL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"
 QUERY_TYPE = "Author"  # Author : 저자검색 / Publisher : 출판사검색
 QUERY_TYPE_LABEL = {"Author": "저자명", "Publisher": "출판사명"}
+MULTI_CATEGORY = True
 
 COLUMNS = [
     "title", "link", "author", "pubDate", "description",
@@ -94,19 +95,35 @@ def search_all(query, category_id):
 def main():
     label = QUERY_TYPE_LABEL.get(QUERY_TYPE, QUERY_TYPE)
     query = input(f"{label} 입력: ").strip()
-    category_id = input("카테고리ID 입력 (없으면 Enter): ").strip() or "0"
 
-    print(f"\n'{query}' 검색 중...")
-    items = search_all(query, category_id)
+    if MULTI_CATEGORY:
+        category_ids = []
+        print("카테고리ID를 하나씩 입력하세요 (입력 완료 시 빈 값으로 Enter):")
+        while True:
+            cid = input("  카테고리ID: ").strip()
+            if not cid:
+                break
+            category_ids.append(cid)
+        if not category_ids:
+            category_ids = ["0"]
+    else:
+        category_ids = [input("카테고리ID 입력 (없으면 Enter): ").strip() or "0"]
 
-    if not items:
+    all_items = []
+    for category_id in category_ids:
+        print(f"\n'{query}' (카테고리: {category_id}) 검색 중...")
+        items = search_all(query, category_id)
+        all_items.extend(items)
+
+    if not all_items:
         print("검색 결과가 없습니다.")
         return
 
-    df = pd.DataFrame(items, columns=COLUMNS)
-    filename = f"aladin_{query}_{category_id}.xlsx"
+    df = pd.DataFrame(all_items, columns=COLUMNS)
+    cat_label = "_".join(category_ids)
+    filename = f"aladin_{query}_{cat_label}.xlsx"
     df.to_excel(filename, index=False, engine="openpyxl")
-    print(f"\n완료! {len(items)}건 저장 → {filename}")
+    print(f"\n완료! {len(all_items)}건 저장 → {filename}")
 
 
 if __name__ == "__main__":
