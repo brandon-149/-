@@ -37,14 +37,33 @@ def fetch_page(query, category_id, start):
 
 def extract_item(item):
     """item에서 필요한 필드 추출 (seriesInfo 포함)"""
-    row = {}
-    for col in COLUMNS:
-        if col in ("seriesId", "seriesLink", "seriesName"):
-            series = item.get("seriesInfo", {})
-            row[col] = series.get(col, "")
-        else:
-            row[col] = item.get(col, "")
-    return row
+    series = item.get("seriesInfo", {})
+    return {
+        "title": item.get("title", ""),
+        "link": item.get("link", ""),
+        "author": item.get("author", ""),
+        "pubDate": item.get("pubDate", ""),
+        "description": item.get("description", ""),
+        "isbn": item.get("isbn", ""),
+        "isbn13": item.get("isbn13", ""),
+        "itemId": item.get("itemId", ""),
+        "priceSales": item.get("priceSales", ""),
+        "priceStandard": item.get("priceStandard", ""),
+        "mallType": item.get("mallType", ""),
+        "stockStatus": item.get("stockStatus", ""),
+        "mileage": item.get("mileage", ""),
+        "cover": item.get("cover", ""),
+        "categoryId": item.get("categoryId", ""),
+        "categoryName": item.get("categoryName", ""),
+        "publisher": item.get("publisher", ""),
+        "salesPoint": item.get("salesPoint", ""),
+        "adult": item.get("adult", ""),
+        "fixedPrice": item.get("fixedPrice", ""),
+        "customerReviewRank": item.get("customerReviewRank", ""),
+        "seriesId": series.get("seriesId", ""),
+        "seriesLink": series.get("seriesLink", ""),
+        "seriesName": series.get("seriesName", ""),
+    }
 
 
 def search_all(query, category_id):
