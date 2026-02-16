@@ -5,7 +5,7 @@ import time
 
 TTB_KEY = "ttbrlaguswls5251446001"
 BASE_URL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"
-QUERY_TYPE = "Publisher"
+QUERY_TYPE = "Author"  # Author : 저자검색 / Publisher : 출판사검색
 QUERY_TYPE_LABEL = {"Author": "저자명", "Publisher": "출판사명"}
 
 COLUMNS = [
@@ -23,9 +23,9 @@ def fetch_page(query, category_id, start):
     params = {
         "ttbkey": TTB_KEY,
         "Query": query,
-        "QueryType": QUERY_TYPE,
+        "QueryType": QUERY_TYPE, 
         "MaxResults": 20,
-        "Sort": "Title",
+        "Sort": "Title",  # Title : 제목정렬 / PublishTime : 출간일정렬
         "start": start,
         "SearchTarget": "Book",
         "CategoryId": category_id,
